@@ -4,7 +4,8 @@
 #include "../util/memory.h"
 #include "gdt_macros.h"
 
-#define GDT_TSS 0x0089
+// TODO document this number better
+#define GDT_TSS 0x0089 // 0x0088 | 0x1 (present bit)
 
 struct gdtr_t {
 	uint16_t limit;
@@ -21,7 +22,7 @@ struct tss_t {
 struct tss_t tss;
 
 struct gdtr_t gptr;
-gdt_entry_t gpt[7];
+gdt_entry_t gpt[7]; // null, 2 kernel, 2 user + 2 halves of tss
 extern void gdt_load(struct gdtr_t *gptr);
 
 static gdt_entry_t gdt_entry_init(uint32_t base, uint32_t limit, uint16_t flags)
@@ -44,10 +45,10 @@ static gdt_entry_t gdt_entry_init(uint32_t base, uint32_t limit, uint16_t flags)
 bool gdt_init()
 {
 	gpt[0] = gdt_entry_init(0, 0, 0);
-	gpt[1] = gdt_entry_init(0, 0x000FFFFF, GDT_CODE_KERNEL);
-	gpt[2] = gdt_entry_init(0, 0x000FFFFF, GDT_DATA_KERNEL);
-	gpt[3] = gdt_entry_init(0, 0x000FFFFF, GDT_CODE_USER);
-	gpt[4] = gdt_entry_init(0, 0x000FFFFF, GDT_DATA_USER);
+	gpt[1] = gdt_entry_init(0, 0x000FFFFF, GDT_KERNEL_CODE_FLAGS);
+	gpt[2] = gdt_entry_init(0, 0x000FFFFF, GDT_KERNEL_DATA_FLAGS);
+	gpt[3] = gdt_entry_init(0, 0x000FFFFF, GDT_USER_DATA_FLAGS);
+	gpt[4] = gdt_entry_init(0, 0x000FFFFF, GDT_USER_CODE_FLAGS);
 
 	tss.useless_io_map = sizeof(tss) - 1;
 	gpt[5] = gdt_entry_init((uint32_t) &tss, tss.useless_io_map, GDT_TSS);
