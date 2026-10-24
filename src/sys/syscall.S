@@ -7,6 +7,4 @@ sys_exit:
 	mov tss+4, %rsp
 
 	call proc_exit
-	// TODO: This smells a bad solution
-	sti
-	int $32  // if the interruption happen before it?
+	int $32
