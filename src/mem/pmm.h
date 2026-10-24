@@ -16,14 +16,14 @@ virt_t pmm_alloc();
 void pmm_free(virt_t addr);
 
 #define HHDM_OFFSET 0XFFFF800000000000
-inline virt_t phy_to_virt(unsigned long phy_addr)
+static inline virt_t phy_to_virt(phy_t phy_addr)
 {
 	return (virt_t)(phy_addr + HHDM_OFFSET);
 }
 
-inline phy_t virt_to_phy(unsigned long virt_addr)
+static inline phy_t virt_to_phy(virt_t virt_addr)
 {
-	return (phy_t)(virt_addr - HHDM_OFFSET);
+	return (phy_t)((uint64_t)virt_addr - HHDM_OFFSET);
 }
 
 #endif // PMM_PMM_H

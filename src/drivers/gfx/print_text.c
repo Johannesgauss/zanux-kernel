@@ -73,6 +73,8 @@ static inline void print_string_inline(string line)
 
 static inline void print_str_inline(char *line)
 {
+	// TODO: remove this later!
+	if (cursor.y > 200) return;
 	for (size_t i = 0; line[i] != '\0'; i++) {
 		print_char_inline(line[i]);
 	}	

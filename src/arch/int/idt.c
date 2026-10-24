@@ -6,6 +6,12 @@
 #include "idt.h"
 #include "irq.h"
 #include "drivers/clk/clk_macros.h"
+#include "../gdt_macros.h"
+
+//  P DPL paper type
+//0b1 00   0    1110
+#define IDT_FLAGS 0b10001110
+#define IDT_SYSCALL_FLAGS 0b11101110
 
 extern void *irq_routines[16];
 struct idt_gate {
@@ -29,8 +35,6 @@ struct idtr_t idtr;
 extern void *idt_stub_table[IDT_MAX_GATES];
 extern void idt_load(struct idtr_t *idtr);
 
-#define GDT_OFFSET_KERNEL_CODE 0x08 
-
 static struct idt_gate idt_set_gate(uint64_t offset, uint16_t segment, uint8_t flags, uint8_t ist)
 {
 	struct idt_gate gate;
@@ -48,6 +52,7 @@ static struct idt_gate idt_set_gate(uint64_t offset, uint16_t segment, uint8_t f
 
 void irq_remap()
 {
+	// TODO: hardcoded values!
 	outportb(PIC1_COMMAND, 0x11); io_wait();
 	outportb(PIC2_COMMAND, 0x11); io_wait();
 
@@ -65,6 +70,7 @@ void irq_remap()
 }
 
 extern void *int_handler();
+extern void syscall_handler(int code, int param);
 bool idt_init()
 {
 	irq_remap();
@@ -73,9 +79,10 @@ bool idt_init()
 	idtr.limit = (uint16_t)sizeof(struct idt_gate) * IDT_MAX_GATES - 1;
 
 	for (int i = 0; i < IDT_MAX_GATES; i++) {
-		idt[i] = idt_set_gate((uint64_t)idt_stub_table[i], GDT_OFFSET_KERNEL_CODE, 0x8E, 0);
+		idt[i] = idt_set_gate((uint64_t)idt_stub_table[i], GDT_KERNEL_CODE, IDT_FLAGS, 0);
 	}
-	idt[32] = idt_set_gate((uint64_t)int_handler, GDT_OFFSET_KERNEL_CODE, 0x8E, 0);
+	idt[32] = idt_set_gate((uint64_t)int_handler, GDT_KERNEL_CODE, IDT_FLAGS, 0);
+	idt[0x80] = idt_set_gate((uint64_t)syscall_handler, GDT_KERNEL_CODE, IDT_SYSCALL_FLAGS, 0);
 ;
 
 	asm volatile ( "lidt %0" : : "m"(idtr));

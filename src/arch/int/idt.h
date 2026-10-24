@@ -6,7 +6,6 @@
 
 #define IDT_MAX_GATES 256
 
-
 struct gp_regs {
 	void *rax;
 	void *rbx;

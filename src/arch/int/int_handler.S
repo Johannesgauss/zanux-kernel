@@ -1,4 +1,5 @@
-#define ctx_off 0
+#define intf_off 0x18
+#define pml4_off 0x10
 .global int_handler
 .type int_handler, @function
 .extern tss
@@ -28,6 +29,16 @@ int_handler:
 	mov %rax, %rbx
 	// inside %rbx lies the new process!
 
+	// load the new pml4
+	// TODO: this is unnefficient, TLB!
+	// I must:
+	// skip it if cr3 didn't change
+	// PTE_G and PGE
+	// PCID
+	mov pml4_off(%rax), %rcx
+	mov %rcx, %cr3
+
+
 	mov $PIC1_COMMAND, %rdi
 	mov $PIC_EOI, %rsi
 	call outb
@@ -36,37 +47,37 @@ int_handler:
 	// 0x28 because of hw_frame stuff pushed by machine
 	
 	// to get rip
-	mov ctx_off+0x78(%rbx), %rdi
+	mov intf_off+0x78(%rbx), %rdi
 	// to get rflags
-	mov ctx_off+0x88(%rbx), %rsi
+	mov intf_off+0x88(%rbx), %rsi
 	// to get rsp
-	mov ctx_off+0x90(%rbx), %rdx
+	mov intf_off+0x90(%rbx), %rdx
 
 	mov %rsp, tss+4(%rip) 
 
-	push $GDT_OFFSET_KERNEL_DATA
+	push $GDT_USER_DATA
 	push %rdx // stack
 	//pushfq
 	push %rsi
 	//push $0x202 // TODO a better way!
-	push $GDT_OFFSET_KERNEL_CODE
+	push $GDT_USER_CODE
 	push %rdi
 
-	mov ctx_off+0x70(%rbx), %r15
-	mov ctx_off+0x68(%rbx), %r14
-	mov ctx_off+0x60(%rbx), %r13
-	mov ctx_off+0x58(%rbx), %r12
-	mov ctx_off+0x50(%rbx), %r11
-	mov ctx_off+0x48(%rbx), %r10
-	mov ctx_off+0x40(%rbx), %r9
-	mov ctx_off+0x38(%rbx), %r8
-	mov ctx_off+0x30(%rbx), %rbp
-	mov ctx_off+0x28(%rbx), %rdi
-	mov ctx_off+0x20(%rbx), %rsi
-	mov ctx_off+0x18(%rbx), %rdx
-	mov ctx_off+0x10(%rbx), %rcx
+	mov intf_off+0x70(%rbx), %r15
+	mov intf_off+0x68(%rbx), %r14
+	mov intf_off+0x60(%rbx), %r13
+	mov intf_off+0x58(%rbx), %r12
+	mov intf_off+0x50(%rbx), %r11
+	mov intf_off+0x48(%rbx), %r10
+	mov intf_off+0x40(%rbx), %r9
+	mov intf_off+0x38(%rbx), %r8
+	mov intf_off+0x30(%rbx), %rbp
+	mov intf_off+0x28(%rbx), %rdi
+	mov intf_off+0x20(%rbx), %rsi
+	mov intf_off+0x18(%rbx), %rdx
+	mov intf_off+0x10(%rbx), %rcx
 
-	mov ctx_off+0(%rbx), %rax
-	mov ctx_off+8(%rbx), %rbx
+	mov intf_off+0(%rbx), %rax
+	mov intf_off+8(%rbx), %rbx
 
 	iretq

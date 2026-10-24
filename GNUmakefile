@@ -62,14 +62,19 @@ ifeq ($(TOOLCHAIN),llvm)
 endif
 
 # User controllable C flags.
-CFLAGS := -g -O2 -pipe
+ifneq ($(filter run-debug,$(MAKECMDGOALS)),)
+    CFLAGS := -g -O0 -pipe
+    RUSTFLAGS := -g -O
+else
+    CFLAGS := -g -O2 -pipe
+    RUSTFLAGS := -O
+endif
 
 # User controllable C preprocessor flags. We set none by default.
 CPPFLAGS :=
 
 # User controllable nasm flags.
 NASMFLAGS := -g
-RUSTFLAGS := -O
 
 # User controllable linker flags. We set none by default.
 LDFLAGS :=
@@ -175,6 +180,7 @@ override CFLAGS += \
     -Wextra \
     -Wpadded \
     -std=gnu11 \
+    -fgnu89-inline \
     -ffreestanding \
     -fno-common \
     -fno-stack-protector \
@@ -232,6 +238,7 @@ override LDFLAGS += \
     -static \
     -Wl,-z,max-page-size=0x1000 \
     -Wl,-z,noexecstack \
+    -Wl,-z,muldefs \
     -Wl,--gc-sections \
     -Wl,-T,boot/linker-scripts/x86_64.lds \
     -Wl,-m,elf_x86_64
