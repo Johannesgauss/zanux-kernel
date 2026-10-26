@@ -1,27 +1,49 @@
 #include "test.h"
 #include "util/alias.h"
 #include "drivers/gfx/print_text.h"
-extern void retsys();
+
 __attribute__((noipa))
 int foo()
 {
-	retsys();
-	//print_line("I'm foo!\n");
 	for (long i = 0; i < 0xFFFFFFF; i++) { 
-		asm volatile ("nop");
+	register int64_t rax asm("rax") = 1;
+	register int64_t rdi asm("rdi") = 0;
+	register const char *rsi asm("rsi") = "I'm foo!\n";
+	register umax rdx asm("rdx") = 9;
+
+	asm volatile(
+		"syscall"
+		: "+r"(rax)
+		: "r"(rdi), "r"(rsi), "r"(rdx)
+		: "rcx", "r11", "memory"
+	);
+
 	}
-//	while (1) {};
-	
+
+	register int64_t exit_rax asm("rax") = 0;
+	asm volatile("syscall" : "+r"(exit_rax) :: "rcx", "r11", "memory");
+
+	return 0;
 }
 
 __attribute__((noipa))
 int fizz()
 {
-	retsys();
+	register int64_t rax asm("rax") = 0;
+
+	asm volatile(
+		"syscall"
+		: "+r"(rax)
+		:
+		: "rcx", "r11", "memory"
+	);
+
 	for (long i = 0; i < 0xFFFFFFF; i++) { 
 		asm volatile ("nop");
 	}
-	
-	//while (1) {};
 
+	register int64_t exit_rax asm("rax") = 0;
+	asm volatile("syscall" : "+r"(exit_rax) :: "rcx", "r11", "memory");
+
+	return 0;
 }
