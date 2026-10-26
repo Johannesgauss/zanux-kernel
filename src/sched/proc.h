@@ -1,9 +1,9 @@
 #ifndef SCHED_PROC
 #define SCHED_PROC
 
-#include "../util/alias.h"
-#include "../arch/int/idt.h"
-#include "../arch/int/arch_proc.h"
+#include "util/alias.h"
+#include "arch/int/idt.h"
+#include "arch/int/arch_proc.h"
 #include <stddef.h>
 
 typedef enum {
