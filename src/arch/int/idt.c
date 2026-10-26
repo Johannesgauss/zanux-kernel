@@ -6,7 +6,7 @@
 #include "idt.h"
 #include "irq.h"
 #include "drivers/clk/clk_macros.h"
-#include "../gdt_macros.h"
+#include "arch/gdt_macros.h"
 
 //  P DPL paper type
 //0b1 00   0    1110
@@ -93,44 +93,44 @@ bool idt_init()
 
 void exception_handler(struct idt_stack_call *regs)
 {
-	print_line("\n--- KERNEL PANIC: CPU EXCEPTION ---\n");
-	print_line("Exception: ");
+	kprint("\n--- KERNEL PANIC: CPU EXCEPTION ---\n");
+	kprint("Exception: ");
 
 	uint64_t int_no = get_vector(regs);
 	switch (int_no) {
-	case 0:  print_line("0 - Division by Zero (#DE)\n"); break;
-	case 1:  print_line("1 - Debug (#DB)\n"); break;
-	case 2:  print_line("2 - Non-Maskable Interrupt (#NMI)\n"); break;
-	case 3:  print_line("3 - Breakpoint (#BP)\n"); break;
-	case 4:  print_line("4 - Overflow (#OF)\n"); break;
-	case 5:  print_line("5 - Bound Range Exceeded (#BR)\n"); break;
-	case 6:  print_line("6 - Invalid Opcode (#UD)\n"); break;
-	case 7:  print_line("7 - Device Not Available (#NM)\n"); break;
-	case 8:  print_line("8 - Double Fault (#DF)\n"); break;
-	case 9:  print_line("9 - Coprocessor Segment Overrun\n"); break;
-	case 10: print_line("10 - Invalid TSS (#TS)\n"); break;
-	case 11: print_line("11 - Segment Not Present (#NP)\n"); break;
-	case 12: print_line("12 - Stack-Segment Fault (#SS)\n"); break;
-	case 13: print_line("13 - General Protection Fault (#GP)\n"); break;
-	case 14: print_line("14 - Page Fault (#PF)\n"); break;
-	case 15: print_line("15 - Reserved\n"); break;
-	case 16: print_line("16 - x87 Floating-Point Exception (#MF)\n"); break;
-	case 17: print_line("17 - Alignment Check (#AC)\n"); break;
-	case 18: print_line("18 - Machine Check (#MC)\n"); break;
-	case 19: print_line("19 - SIMD Floating-Point Exception (#XM)\n"); break;
-	case 20: print_line("20 - Virtualization Exception (#VE)\n"); break;
-	case 21: print_line("21 - Control Protection Exception (#CP)\n"); break;
-	case 28: print_line("28 - Hypervisor Injection Exception (#HV)\n"); break;
-	case 29: print_line("29 - VMM Communication Exception (#VC)\n"); break;
-	case 30: print_line("30 - Security Exception (#SX)\n"); break;
-	default: print_line("Reserved / Unknown Exception\n"); break;
+	case 0:  kprint("0 - Division by Zero (#DE)\n"); break;
+	case 1:  kprint("1 - Debug (#DB)\n"); break;
+	case 2:  kprint("2 - Non-Maskable Interrupt (#NMI)\n"); break;
+	case 3:  kprint("3 - Breakpoint (#BP)\n"); break;
+	case 4:  kprint("4 - Overflow (#OF)\n"); break;
+	case 5:  kprint("5 - Bound Range Exceeded (#BR)\n"); break;
+	case 6:  kprint("6 - Invalid Opcode (#UD)\n"); break;
+	case 7:  kprint("7 - Device Not Available (#NM)\n"); break;
+	case 8:  kprint("8 - Double Fault (#DF)\n"); break;
+	case 9:  kprint("9 - Coprocessor Segment Overrun\n"); break;
+	case 10: kprint("10 - Invalid TSS (#TS)\n"); break;
+	case 11: kprint("11 - Segment Not Present (#NP)\n"); break;
+	case 12: kprint("12 - Stack-Segment Fault (#SS)\n"); break;
+	case 13: kprint("13 - General Protection Fault (#GP)\n"); break;
+	case 14: kprint("14 - Page Fault (#PF)\n"); break;
+	case 15: kprint("15 - Reserved\n"); break;
+	case 16: kprint("16 - x87 Floating-Point Exception (#MF)\n"); break;
+	case 17: kprint("17 - Alignment Check (#AC)\n"); break;
+	case 18: kprint("18 - Machine Check (#MC)\n"); break;
+	case 19: kprint("19 - SIMD Floating-Point Exception (#XM)\n"); break;
+	case 20: kprint("20 - Virtualization Exception (#VE)\n"); break;
+	case 21: kprint("21 - Control Protection Exception (#CP)\n"); break;
+	case 28: kprint("28 - Hypervisor Injection Exception (#HV)\n"); break;
+	case 29: kprint("29 - VMM Communication Exception (#VC)\n"); break;
+	case 30: kprint("30 - Security Exception (#SX)\n"); break;
+	default: kprint("Reserved / Unknown Exception\n"); break;
 	}
 
-	print_line("RIP:    "); print_hex((uint64_t)regs->hw.rip);      print_line("\n");
-	print_line("CS:     "); print_hex((uint64_t)regs->hw.cs);       print_line("\n");
-	print_line("RFLAGS: "); print_hex((uint64_t)regs->hw.rflags);   print_line("\n");
-	print_line("RSP:    "); print_hex((uint64_t)regs->hw.rsp);      print_line("\n");
-	print_line("ERR:    "); print_hex((uint64_t)regs->err_code);    print_line("\n");
+	kprint("RIP:    "); print_hex((uint64_t)regs->hw.rip);      kprint("\n");
+	kprint("CS:     "); print_hex((uint64_t)regs->hw.cs);       kprint("\n");
+	kprint("RFLAGS: "); print_hex((uint64_t)regs->hw.rflags);   kprint("\n");
+	kprint("RSP:    "); print_hex((uint64_t)regs->hw.rsp);      kprint("\n");
+	kprint("ERR:    "); print_hex((uint64_t)regs->err_code);    kprint("\n");
 
 	while (1) {
 		asm volatile ("cli; hlt");

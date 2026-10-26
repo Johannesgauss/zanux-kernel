@@ -20,6 +20,7 @@ void gfx_init();
 
 void print_char(char c);
 void print_string(string line);
+void kprint(char *line);
 void print_line(char *line);
 void print_hex(uint64_t val);
 
