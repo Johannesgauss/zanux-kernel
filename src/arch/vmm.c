@@ -1,8 +1,8 @@
-#include "../mem/pmm.h"
+#include "mem/pmm.h"
 #include "vmm.h"
 #include <stdint.h>
 #include "util/memory.h"
-#include "../util/alias.h"
+#include "util/alias.h"
 
 virt_array g_pml4;
 

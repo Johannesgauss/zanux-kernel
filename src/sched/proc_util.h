@@ -1,9 +1,9 @@
-#include "../mem/pmm.h"
-#include "../mem/kmalloc.h"
-#include "../util/alias.h"
+#include "mem/pmm.h"
+#include "mem/kmalloc.h"
+#include "util/alias.h"
 #include "proc.h"
 #include "test/test.h"
-#include "../util/memory.h"
+#include "util/memory.h"
 
 static struct proc *hash_table_id_search(uint id);
 static void hash_table_id_insert(struct proc *proc);

@@ -1,8 +1,8 @@
 #include "idt.h"
-#include "../vmm.h"
-#include "../../mem/pmm.h"
-#include "../../util/alias.h"
-#include "../gdt_macros.h"
+#include "arch/vmm.h"
+#include "mem/pmm.h"
+#include "util/alias.h"
+#include "arch/gdt_macros.h"
 struct arch_proc {
 	phy_t cr3;
 	struct int_frame intf;

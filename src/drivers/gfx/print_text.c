@@ -78,7 +78,8 @@ static inline void print_str_inline(char *line)
 	for (size_t i = 0; line[i] != '\0'; i++) {
 		print_char_inline(line[i]);
 	}	
-} void print_line(char *line) { print_str_inline(line); };
+} void kprint(char *line) { print_str_inline(line); };
+void print_line(char *line) { kprint(line); };
 
 
 void print_hex(uint64_t val)
@@ -91,5 +92,5 @@ void print_hex(uint64_t val)
 		buf[2 + (15 - i)] = hex_chars[(val >> (i * 4)) & 0xF];
 	}
 	buf[18] = '\0';
-	print_line(buf);
+	kprint(buf);
 }

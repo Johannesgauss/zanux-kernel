@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../util/panic.h"
+#include "util/panic.h"
 
 typedef uint64_t phy_t;
 typedef void *virt_t;

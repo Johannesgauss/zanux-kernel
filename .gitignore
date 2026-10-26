@@ -15,3 +15,6 @@
 /boot/limine-binary.tar.gz
 /edk2-ovmf-bins/
 /edk2-ovmf-bins.tar.gz
+
+# Scratch and notes
+knuth_derivation.txt

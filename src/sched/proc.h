@@ -1,9 +1,9 @@
 #ifndef SCHED_PROC
 #define SCHED_PROC
 
-#include "../util/alias.h"
-#include "../arch/int/idt.h"
-#include "../arch/int/arch_proc.h"
+#include "util/alias.h"
+#include "arch/int/idt.h"
+#include "arch/int/arch_proc.h"
 #include <stddef.h>
 
 typedef enum {
@@ -28,6 +28,6 @@ struct proc *proc_create(virt_t ptr, size_t code_size, size_t stack_size);
 
 void proc_kill(ushort id);
 void proc_exit(int retvalue);
-struct proc *proc_sched(struct int_frame *hf);
+struct proc *proc_int(struct int_frame *hf);
 
 #endif // SCHED_PROC

@@ -16,30 +16,30 @@ extern void syscall_init();
 void kmain() 
 {
 	gfx_init();
-	print_line("Welcome to Zanux Operating System\nCopyright (c). All rights reserved.\n");
+	kprint("Welcome to Zanux Operating System\nCopyright (c). All rights reserved.\n");
 	if (gdt_init())
-		print_line("[ SUCCESS ] Global Descriptor Table (GDT) loaded. \n");
+		kprint("[ SUCCESS ] Global Descriptor Table (GDT) loaded. \n");
 	
 	if (timer_add())
-		print_line("[ SUCCESS ] Programmable Interval Timer (PIT) setted on Interrupt Request 0 (IRQ0).\n");
+		kprint("[ SUCCESS ] Programmable Interval Timer (PIT) setted on Interrupt Request 0 (IRQ0).\n");
 
 	if (pmm_init())
-		print_line("[ SUCCESS ] Physical Memory Managment (PMM) loaded.\n");
+		kprint("[ SUCCESS ] Physical Memory Managment (PMM) loaded.\n");
 
 	if (vmm_init())
-		print_line("[ SUCCESS ] Virtual Memory Managment (VMM) loaded.\n");
+		kprint("[ SUCCESS ] Virtual Memory Managment (VMM) loaded.\n");
 
 	proc_tmp_setup();
 
 	syscall_init();
 	if (idt_init())
-		print_line("[ SUCCESS ] Interrupt Descriptor Table (IDT) loaded.\n");
+		kprint("[ SUCCESS ] Interrupt Descriptor Table (IDT) loaded.\n");
 
 	irqr_add(1, kb_handler);
 
 	char *full_word = kmalloc(30);
 	full_word = "Hello, World!\n";
-	print_line(full_word);
+	kprint(full_word);
 
 
 

@@ -1,9 +1,9 @@
-#include "../mem/kmalloc.h"
-#include "../util/alias.h"
+#include "mem/kmalloc.h"
+#include "util/alias.h"
 #include "proc.h"
 #include "test/test.h"
 #include "proc_util.h"
-#include "../drivers/gfx/print_text.h"
+//#include "drivers/gfx/print_text.h"
 
 static struct proc proc_inst_inline(state_t state, virt_t ptr, uint stack_size);
 static struct proc proc_create_inline(virt_t ptr, uint code_size, uint stack_size);
@@ -78,8 +78,8 @@ struct proc *proc_create(virt_t ptr, size_t code_size, size_t stack_size)
 
 	arch_proc_init(&proc->ctx);
 
-	proc->ctx.intf.hw.rsp = usr_kmalloc(stack_size) + stack_size;
-	proc->stbase = proc->ctx.intf.hw.rsp;
+	proc->stbase = usr_kmalloc(stack_size);
+	proc->ctx.intf.hw.rsp = (virt_array)(((uintptr_t)proc->stbase + stack_size) & ~0xFULL);
 	proc->ctx.intf.hw.rflags = (1 << 9) | 0b10;
 	// Considering real programs, they will be loaded from storage, so this
 	// is just a dummy implementation anyway, so
@@ -94,24 +94,26 @@ struct proc *proc_create(virt_t ptr, size_t code_size, size_t stack_size)
 	return proc;
 }
 
-struct proc *proc_sched(struct int_frame *intf)
+extern struct proc *proc_sched();
+struct proc *proc_int(struct int_frame *intf)
 {
-	// TODO: I don't think this is the better solution!
-	if (in_user_mode(intf)) {
+	// TODO: I don't think this is the best solution!
+	if (current_proc && in_user_mode(intf)) {
 		current_proc->ctx.intf = *intf;
-		//print_hex((uint64_t)current_proc->ctx.intf.rip);
-		//print_hex((uint64_t)current_proc->ctx.intf.rsp);
+		if (current_proc->state == PROC_EXEC)
+			current_proc->state = PROC_READY;
 	}
 
-	if (current_proc->id == 0 && hash_table_id_search_inline(1)->state != PROC_DEAD) {
-		proc_switch_inline(intf, 1);
-	} else if (current_proc->id == 1 && hash_table_id_search_inline(0)->state != PROC_DEAD){
-		proc_switch_inline(intf, 0);		
-	} else {
+	struct proc *next = proc_sched();
+	
+
+	if (!next) {
 		while (1) {
 			asm volatile ("hlt");
 		}
 	}
+	next->state = PROC_EXEC;
+	current_proc = next;
 
 	return current_proc;
 }

@@ -25,7 +25,7 @@ int_handler:
 	push %rax
 
 	mov %rsp, %rdi
-	call proc_sched
+	call proc_int
 	mov %rax, %rbx
 	// inside %rbx lies the new process!
 

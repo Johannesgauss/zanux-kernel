@@ -1,8 +1,8 @@
 #ifndef MEM_KMALLOC_H
 #define MEM_KMALLOC_H
 
-#include "../arch/vmm.h"
-#include "../util/alias.h"
+#include "arch/vmm.h"
+#include "util/alias.h"
 #include <stddef.h>
 
 virt_t kmalloc(size_t size);

@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdbool.h> 
 #include "gdt.h"
-#include "../util/memory.h"
+#include "util/memory.h"
 #include "gdt_macros.h"
 
 // TODO document this number better
