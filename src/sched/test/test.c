@@ -5,7 +5,6 @@
 __attribute__((noipa))
 int foo()
 {
-	for (long i = 0; i < 0xFFFFFFF; i++) { 
 	register int64_t rax asm("rax") = 1;
 	register int64_t rdi asm("rdi") = 0;
 	register const char *rsi asm("rsi") = "I'm foo!\n";
@@ -18,6 +17,8 @@ int foo()
 		: "rcx", "r11", "memory"
 	);
 
+	for (long i = 0; i < 0xFFFFFFF; i++) { 
+		asm volatile ("nop");
 	}
 
 	register int64_t exit_rax asm("rax") = 0;
