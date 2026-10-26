@@ -1,7 +1,7 @@
-#ifndef SYS_SYCALL_H
-#define SYS_SYCALL_H
+#ifndef ARCH_SYS_SYCALL_H
+#define ARCH_SYS_SYCALL_H
 
-#include "../util/alias.h"
+#include "util/alias.h"
 #include <stddef.h>
 #define EFER_ID 0xC0000080
 #define STAR_ID 0xC0000081
@@ -22,5 +22,6 @@ inline uint64_t rdmsr(uint32_t msr_id)
 
 	return ((uint64_t)high << 0x20) + low;
 }
+extern void sys_exit(int retvalue);
 
-#endif // SYS_SYCALL_H
+#endif // ARCH_SYS_SYCALL_H
