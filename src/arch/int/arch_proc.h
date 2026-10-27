@@ -10,7 +10,7 @@ struct arch_proc {
 
 // TODO modify name
 // btw optimize it as well
-inline void arch_proc_init(struct arch_proc *ctx)
+static inline void arch_proc_init(struct arch_proc *ctx)
 {
 	virt_array pml4 = (virt_array) pmm_alloc();
 	// cpy kernel high half stuff
@@ -27,7 +27,7 @@ inline void arch_proc_init(struct arch_proc *ctx)
 	g_pml4 = pml4;
 }
 
-inline int in_user_mode(struct int_frame *intf)
+static inline int in_user_mode(struct int_frame *intf)
 {
 	return (uint64_t)intf->hw.cs == GDT_USER_CODE;
 }

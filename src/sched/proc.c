@@ -5,6 +5,10 @@
 #include "proc_util.h"
 //#include "drivers/gfx/print_text.h"
 
+struct proc *proc_hash_table[PROC_HASH_TABLE_SIZE] = {0};
+ushort id_count = 0;
+struct proc *current_proc = NULL;
+
 static struct proc proc_inst_inline(state_t state, virt_t ptr, uint stack_size);
 static struct proc proc_create_inline(virt_t ptr, uint code_size, uint stack_size);
 static void proc_kill_inline(struct proc *proc);

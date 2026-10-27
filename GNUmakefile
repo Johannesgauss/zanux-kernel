@@ -238,7 +238,6 @@ override LDFLAGS += \
     -static \
     -Wl,-z,max-page-size=0x1000 \
     -Wl,-z,noexecstack \
-    -Wl,-z,muldefs \
     -Wl,--gc-sections \
     -Wl,-T,boot/linker-scripts/x86_64.lds \
     -Wl,-m,elf_x86_64

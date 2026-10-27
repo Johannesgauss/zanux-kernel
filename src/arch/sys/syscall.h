@@ -9,12 +9,12 @@
 #define CSTAR_ID 0xC0000083
 #define SF_MASK_ID 0xC0000084
 
-inline void wrmsr(uint32_t msr_id, uint64_t value)
+static inline void wrmsr(uint32_t msr_id, uint64_t value)
 {
 	asm volatile ("wrmsr":: "a"((uint32_t)(value & 0xFFFFFFFF)), "d"((uint32_t)(value >> 0x20)), "c"(msr_id));
 }
 
-inline uint64_t rdmsr(uint32_t msr_id)
+static inline uint64_t rdmsr(uint32_t msr_id)
 {
 	uint32_t high, low;	
 

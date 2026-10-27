@@ -11,10 +11,9 @@ static void hash_table_id_insert(struct proc *proc);
 // TODO: a better implementation
 #define HASH_TABLE_LOG 8
 #define PROC_HASH_TABLE_SIZE (1 << HASH_TABLE_LOG)
-static struct proc *proc_hash_table[PROC_HASH_TABLE_SIZE];
-
-static ushort id_count = 0;
-static struct proc *current_proc = NULL;
+extern struct proc *proc_hash_table[PROC_HASH_TABLE_SIZE];
+extern ushort id_count;
+extern struct proc *current_proc;
 
 #define GOLDEN_RATIO_32_SCALED 0x9E3779B9U
 static inline uint hash_table_id_gen(uint id)
